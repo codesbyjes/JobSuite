@@ -50,3 +50,180 @@ label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
 .prot{border:1px dashed var(--pu);background:rgba(176,38,255,.08)}
 @media(max-width:760px){.shell{flex-direction:column}nav.side{width:100%;display:flex;overflow-x:auto;padding:8px;border-right:0;border-bottom:1px solid var(--bd)}nav.side a,nav.side button{white-space:nowrap;width:auto}.logo{display:none}main{padding:16px}.city{grid-template-columns:78px 1fr 70px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* JobSuite authentication pages */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: #f4f6fb;
+  color: #172033;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 36px;
+  border: 1px solid #e4e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 48px rgba(20, 35, 70, 0.08);
+}
+
+.auth-brand {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #3157d5;
+  font-size: 24px;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: -0.7px;
+}
+
+.auth-card h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  line-height: 1.25;
+  letter-spacing: -0.7px;
+}
+
+.auth-card > p {
+  margin: 0 0 24px;
+  color: #687386;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-card label {
+  margin-top: 6px;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auth-card input {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid #d7dce5;
+  border-radius: 8px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.auth-card input:focus {
+  outline: 3px solid rgba(49, 87, 213, 0.14);
+  border-color: #3157d5;
+}
+
+.auth-card button {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 9px;
+  background: #3157d5;
+  color: white;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-card button:hover {
+  background: #2445b7;
+}
+
+.auth-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.auth-footer {
+  margin: 22px 0 0 !important;
+  text-align: center;
+  font-size: 13px !important;
+}
+
+.auth-footer a {
+  color: #3157d5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.auth-error,
+.auth-success {
+  margin-bottom: 18px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.auth-error {
+  border: 1px solid #f2c7c7;
+  background: #fff2f2;
+  color: #a32121;
+}
+
+.auth-success {
+  border: 1px solid #b8e2c7;
+  background: #effaf2;
+  color: #176b36;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 26px 20px;
+  }
+
+  .auth-card h1 {
+    font-size: 25px;
+  }
+}
+
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.auth-card .password-field input {
+  padding-right: 70px;
+}
+
+.auth-card .password-field .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: auto;
+  min-height: auto;
+  margin: 0;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  color: #3157d5;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-card .password-field .password-toggle:hover {
+  background: #f0f3ff;
+}
