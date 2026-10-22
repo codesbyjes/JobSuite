@@ -11,7 +11,7 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
@@ -90,6 +90,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false)
             id="fullName"
             type="text"
             autoComplete="name"
+            placeholder="Your full name"
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
             required
@@ -100,58 +101,56 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false)
             id="email"
             type="email"
             autoComplete="email"
+            placeholder="you@example.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
           />
 
-          
-<label htmlFor="password">Password</label>
-<div className="password-field">
-  <input
-    id="password"
-    type={showPassword ? 'text' : 'password'}
-    autoComplete="new-password"
-    minLength={8}
-    value={password}
-    onChange={(event) => setPassword(event.target.value)}
-    required
-  />
-  <button
-    type="button"
-    className="password-toggle"
-    onClick={() => setShowPassword(!showPassword)}
-    aria-label={showPassword ? 'Hide password' : 'Show password'}
-  >
-    {showPassword ? 'Hide' : 'Show'}
-  </button>
-</div>
+          <label htmlFor="password">Password</label>
+          <div className="password-field">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              minLength={8}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
 
-
-        
-<label htmlFor="confirmPassword">Confirm password</label>
-<div className="password-field">
-  <input
-    id="confirmPassword"
-    type={showConfirmPassword ? 'text' : 'password'}
-    autoComplete="new-password"
-    minLength={8}
-    value={confirmPassword}
-    onChange={(event) => setConfirmPassword(event.target.value)}
-    required
-  />
-  <button
-    type="button"
-    className="password-toggle"
-    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-  >
-    {showConfirmPassword ? 'Hide' : 'Show'}
-  </button>
-</div>
-
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <div className="password-field">
+            <input
+              id="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              minLength={8}
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+            >
+              {showConfirmPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
 
           <button type="submit" disabled={loading}>
+            {loading && <span className="spin sm" aria-hidden="true" />}
             {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
