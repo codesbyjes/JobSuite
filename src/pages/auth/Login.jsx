@@ -19,14 +19,20 @@ export default function Login() {
     setLoading(true)
 
     try {
-      const { error: signInError } = await signIn({
+      const { data, error: signInError } = await signIn({
         email: email.trim(),
         password,
       })
 
       if (signInError) throw signInError
 
-      navigate('/student')
+      const role = data.user?.user_metadata?.role
+
+      if (role === 'recruiter') {
+        navigate('/recruiter')
+      } else {
+        navigate('/student')
+      }
     } catch (err) {
       setError(err.message || 'Sign-in failed. Please try again.')
     } finally {

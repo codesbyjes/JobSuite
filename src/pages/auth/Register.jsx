@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
@@ -10,9 +9,10 @@ export default function Register() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [role, setRole] = useState('student')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -44,15 +44,24 @@ export default function Register() {
         fullName,
         email: email.trim(),
         password,
+        role,
       })
 
       if (signUpError) throw signUpError
 
       if (data.session) {
-        navigate('/student')
+        if (role === 'recruiter') {
+          setMessage(
+            'Your recruiter account has been created and is awaiting approval.'
+          )
+        } else {
+          navigate('/student')
+        }
       } else {
         setMessage(
-          'Account created! Check your email for a verification link before signing in.'
+          role === 'recruiter'
+            ? 'Registration received! Verify your email if requested. Your recruiter account must be approved before accessing recruiter features.'
+            : 'Account created! Check your email for a verification link before signing in.'
         )
       }
     } catch (err) {
@@ -85,12 +94,22 @@ export default function Register() {
         )}
 
         <form onSubmit={handleSubmit}>
+          <label htmlFor="role">I want to register as</label>
+          <select
+            id="role"
+            value={role}
+            onChange={(event) => setRole(event.target.value)}
+            required
+          >
+            <option value="student">Student</option>
+            <option value="recruiter">Recruiter</option>
+          </select>
+
           <label htmlFor="fullName">Full name</label>
           <input
             id="fullName"
             type="text"
             autoComplete="name"
-            placeholder="Your full name"
             value={fullName}
             onChange={(event) => setFullName(event.target.value)}
             required
@@ -101,7 +120,6 @@ export default function Register() {
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="you@example.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -143,14 +161,15 @@ export default function Register() {
               type="button"
               className="password-toggle"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+              aria-label={
+                showConfirmPassword ? 'Hide password' : 'Show password'
+              }
             >
               {showConfirmPassword ? 'Hide' : 'Show'}
             </button>
           </div>
 
           <button type="submit" disabled={loading}>
-            {loading && <span className="spin sm" aria-hidden="true" />}
             {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
