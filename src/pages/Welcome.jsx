@@ -22,18 +22,28 @@ export default function Welcome() {
 
   return (
     <div className="hero">
-      <div className="hero-inner page-enter">
-        <div className="logo hero-logo">
+      <div style={{ maxWidth: 980 }}>
+        <div
+          className="logo"
+          style={{ fontSize: 28, margin: '0 0 20px' }}
+        >
           JobSuite
         </div>
 
         {!user && (
-          <div className="hero-actions">
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 12,
+            flexWrap: 'wrap',
+            marginBottom: 28,
+          }}>
             <button className="btn" onClick={() => nav('/login')}>
               Sign In
             </button>
             <button
-              className="btn btn-ok"
+              className="btn"
+              style={{ background: '#20E69A', color: '#07131A' }}
               onClick={() => nav('/register')}
             >
               Get Started / Register
@@ -42,22 +52,48 @@ export default function Welcome() {
         )}
 
         {showWarning && !user && (
-          <div className="hero-alert" role="alert">
+          <div
+            role="alert"
+            style={{
+              maxWidth: 600,
+              margin: '0 auto 24px',
+              padding: '16px 20px',
+              border: '1px solid #ffb4b4',
+              borderRadius: 10,
+              background: '#fff0f0',
+              color: '#c62828',
+              lineHeight: 1.7,
+            }}
+          >
             <strong>Please sign in or create an account first.</strong>
             <div>
               To continue,{' '}
               <button
-                type="button"
-                className="linkish"
                 onClick={() => nav('/login')}
+                style={{
+                  color: '#c62828',
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  textDecoration: 'underline',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
               >
                 Sign In
               </button>
               {' '}or{' '}
               <button
-                type="button"
-                className="linkish"
                 onClick={() => nav('/register')}
+                style={{
+                  color: '#c62828',
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  textDecoration: 'underline',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
               >
                 Create an Account
               </button>.
@@ -67,13 +103,20 @@ export default function Welcome() {
 
         <h1>Real Skills. Equal Opportunities.</h1>
 
-        <p className="mu hero-lead">
+        <p
+          className="mu"
+          style={{
+            fontSize: 18,
+            maxWidth: 640,
+            margin: '14px auto 28px',
+          }}
+        >
           An AI-powered hiring platform that helps fresh talent get
           recognised for what they can actually do — not just where
           they studied.
         </p>
 
-        <div className="grid g2 stagger" style={{ marginBottom: 24 }}>
+        <div className="grid g2" style={{ marginBottom: 24 }}>
           <button
             className="card role s"
             onClick={() => handlePortalClick('/student')}
@@ -95,18 +138,21 @@ export default function Welcome() {
             <p className="mu">
               Discover verified talent, explore skill matches, and hire with confidence.
             </p>
-            <span className="btn btn-ok">
+            <span
+              className="btn"
+              style={{ background: '#20E69A', color: '#07131A' }}
+            >
               Explore Talent
             </span>
           </button>
         </div>
 
-        <p className="mu hero-foot">
+        <p className="mu">
           Build — submit your projects. Verify — prove your skills.
           Get discovered — connect with opportunities.
         </p>
 
-        <p className="mu sm hero-foot">
+        <p className="mu sm">
           Prototype: some features may still use simulated browser data.
         </p>
       </div>
