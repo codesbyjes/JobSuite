@@ -27,10 +27,11 @@ export default function Layout({ mode }) {
   const nav = useNavigate()
 
   useEffect(() => {
-    document.body.className = mode === 'recruiter' ? 'rec' : ''
+    document.body.classList.remove('rec', 'student', 'auth')
+    document.body.classList.add(mode === 'recruiter' ? 'rec' : 'student')
 
     return () => {
-      document.body.className = ''
+      document.body.classList.remove('rec', 'student', 'auth')
     }
   }, [mode])
 
