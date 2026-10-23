@@ -8,7 +8,7 @@ import StudentOverview from './pages/student/Overview.jsx'
 import SubmitProject from './pages/student/SubmitProject.jsx'
 import Skills from './pages/student/Skills.jsx'
 import Assessment from './pages/student/Assessment.jsx'
-import ComingSoon from './pages/ComingSoon.jsx'
+import Opportunities from './pages/student/Opportunities.jsx'
 import RecruiterOverview from './pages/recruiter/Overview.jsx'
 import Discovery from './pages/recruiter/Discovery.jsx'
 import Locations from './pages/recruiter/Locations.jsx'
@@ -47,10 +47,7 @@ function AppShell() {
           <Route path="submit" element={<SubmitProject />} />
           <Route path="skills" element={<Skills />} />
           <Route path="assess/:skill" element={<Assessment />} />
-          <Route
-            path="opportunities"
-            element={<ComingSoon title="Opportunities" />}
-          />
+          <Route path="opportunities" element={<Opportunities />} />
         </Route>
 
         <Route

@@ -53,9 +53,18 @@ export function AppProvider({ children }) {
   }
 
   const addProject = (title, category, skillNames) => {
-    setProjects((projects) => [
-      { title, date: today(), skillCount: skillNames.length },
-      ...projects,
+    const reviewId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+    setProjects((currentProjects) => [
+      {
+        reviewId,
+        title,
+        date: today(),
+        skillCount: skillNames.length,
+        skills: [...skillNames],
+        category,
+        mentorStatus: 'pending',
+      },
+      ...currentProjects,
     ])
 
     setSkills((currentSkills) => [
@@ -68,10 +77,20 @@ export function AppProvider({ children }) {
           status: 'Identified',
           project: title,
           score: null,
+          reviewId,
+          mentorStatus: 'pending',
         })),
     ])
 
     log('Project submitted: ' + title)
+    return reviewId
+  }
+  const unlockProjectAssessments = (reviewId) => {
+    if (!projects.some((project) => project.reviewId === reviewId)) return false
+    setProjects((p) => p.map((project) => project.reviewId === reviewId
+      ? { ...project, assessmentUnlocked: true }
+      : project))
+    return true
   }
 
   const recordAssessment = (name, score, passed) => {
@@ -168,6 +187,7 @@ export function AppProvider({ children }) {
         message,
         toast,
         addProject,
+        unlockProjectAssessments,
         recordAssessment,
         toggleShortlist,
         resetDemo,

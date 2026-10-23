@@ -1,6 +1,5 @@
-
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useApp } from '../../context/AppContext.jsx'
 import StatusBadge from '../../components/StatusBadge.jsx'
 import { QUIZZES } from '../../data/quizzes.js'
@@ -46,7 +45,12 @@ const FILTERS = [
 ]
 
 export default function Skills() {
-  const { skills } = useApp()
+  const { skills, projects } = useApp()
+  const [searchParams] = useSearchParams()
+  const reviewId = searchParams.get('review')
+  const reviewProject = reviewId
+    ? projects.find((project) => project.reviewId === reviewId)
+    : null
 
   const [filter, setFilter] = useState('All')
   const [query, setQuery] = useState('')
@@ -72,15 +76,19 @@ export default function Skills() {
         const matchesStatus =
           filter === 'All' || s.status === filter
 
+        const matchesProject =
+          !reviewProject || (reviewProject.skills || []).includes(s.name)
+
         const haystack =
           `${s.name} ${s.category || ''} ${s.project || ''}`.toLowerCase()
 
         return (
           matchesStatus &&
+          matchesProject &&
           haystack.includes(query.trim().toLowerCase())
         )
       }),
-    [skills, filter, query]
+    [skills, filter, query, reviewProject]
   )
 
   const statusHelp = (status) => {
@@ -118,6 +126,11 @@ export default function Skills() {
             Review the skills associated with your projects,
             inspect the available evidence, and take assessments.
           </p>
+          {reviewProject && (
+            <p className="mu sm">
+              {reviewProject.title} · Mentor review status: Waiting for Mentor Approval
+            </p>
+          )}
         </div>
 
         <Link className="btn g" to="/student/submit">
@@ -230,6 +243,24 @@ export default function Skills() {
 
             const hasQuiz = Boolean(QUIZZES[skill.name])
             const isExpanded = Boolean(expanded[skill.name])
+            const skillProject =
+              (reviewProject?.skills?.includes(skill.name)
+                ? reviewProject
+                : null) ||
+              projects.find((project) => project.reviewId === skill.reviewId) ||
+              projects.find(
+                (project) =>
+                  project.mentorStatus === 'pending' &&
+                  (project.skills || []).includes(skill.name)
+              )
+            const assessmentLocked =
+              skill.mentorStatus === 'pending'
+                ? !skillProject?.assessmentUnlocked
+                : skillProject?.mentorStatus === 'pending' &&
+                  !skillProject.assessmentUnlocked
+            const assessmentUrl = `/student/assess/${encodeURIComponent(
+              skill.name
+            )}${skillProject ? `?review=${encodeURIComponent(skillProject.reviewId)}` : ''}`
 
             return (
               <article
@@ -318,6 +349,9 @@ export default function Skills() {
                 <div className="sm mu">
                   {statusHelp(skill.status)}
                 </div>
+                {skill.mentorStatus === 'pending' && (
+                  <span className="badge b-p">Waiting for Mentor Approval</span>
+                )}
 
                 <button
                   type="button"
@@ -376,16 +410,20 @@ export default function Skills() {
                   <span className="sp" />
 
                   {hasQuiz ? (
-                    <Link
-                      className="btn"
-                      to={`/student/assess/${encodeURIComponent(
-                        skill.name
-                      )}`}
-                    >
-                      {skill.status === 'Verified'
-                        ? 'Retake assessment'
-                        : 'Start assessment'}
-                    </Link>
+                    assessmentLocked ? (
+                      <button className="btn g" type="button" disabled>
+                        Assessment locked until review
+                      </button>
+                    ) : (
+                      <Link
+                        className="btn"
+                        to={assessmentUrl}
+                      >
+                        {skill.status === 'Verified'
+                          ? 'Retake assessment'
+                          : 'Start assessment'}
+                      </Link>
+                    )
                   ) : (
                     <span
                       className="mu sm"

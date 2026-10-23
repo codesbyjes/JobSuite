@@ -20,6 +20,10 @@ export default function Discovery() {
   return (
     <>
       <h1>Find the right talent.</h1><p className="mu">Match skills to opportunities — not college prestige.</p><br />
+      <div className="card demo-note" role="note">
+        <b>Fictional sample candidate profiles · Demo only</b>
+        <span className="mu sm">These profiles and skill matches are illustrative, not real candidates or hiring recommendations.</span>
+      </div><br />
       <div className="card"><div className="flt">
         <input aria-label="Search" placeholder="Search name or skill" value={f.q} onChange={set('q')} />
         <Sel k="city" ph="All cities" opts={[...new Set(all.map((c) => c.city))].map((x) => [x, x])} />
