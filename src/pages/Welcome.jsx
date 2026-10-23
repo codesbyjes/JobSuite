@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,6 +7,15 @@ export default function Welcome() {
   const nav = useNavigate()
   const { user, loading } = useAuth()
   const [showWarning, setShowWarning] = useState(false)
+
+  useEffect(() => {
+    document.body.classList.remove('rec', 'student', 'auth')
+    document.body.classList.add('welcome')
+
+    return () => {
+      document.body.classList.remove('welcome')
+    }
+  }, [])
 
   function handlePortalClick(path) {
     if (loading) return
