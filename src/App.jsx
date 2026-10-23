@@ -24,14 +24,13 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/student"
-        element={
-          <ProtectedRoute requiredRole="student">
-  <Layout mode="student" />
-</ProtectedRoute>
-        }
-      >
+     <Route
+  path="/student"
+  element={
+    <Layout mode="student" />
+  }
+>
+      
         <Route index element={<StudentOverview />} />
         <Route path="submit" element={<SubmitProject />} />
         <Route path="skills" element={<Skills />} />
