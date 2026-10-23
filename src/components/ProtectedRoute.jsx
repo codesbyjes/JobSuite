@@ -32,7 +32,25 @@ export default function ProtectedRoute({
   }
 
   if (requiredRole && profile.role !== requiredRole) {
-    return <Navigate to="/student" replace />
+    const fallbackPath =
+      profile.role === 'recruiter' ? '/recruiter' : '/student'
+
+    return <Navigate to={fallbackPath} replace />
+  }
+
+  if (
+    profile.role === 'recruiter' &&
+    profile.approval_status !== 'approved'
+  ) {
+    return (
+      <main style={{ padding: 32 }}>
+        <h1>Recruiter approval pending</h1>
+        <p>
+          Your recruiter account is awaiting approval. You cannot access
+          recruiter features until an administrator approves your account.
+        </p>
+      </main>
+    )
   }
 
   return children

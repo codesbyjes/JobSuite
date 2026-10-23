@@ -49,7 +49,7 @@ export default function Layout({ mode }) {
   }
 
   return (
-    <div className="shell">
+    <div className={`shell shell-${mode}`}>
       <nav className="side" aria-label="Main">
         <div className="logo">JobSuite</div>
 
@@ -63,51 +63,29 @@ export default function Layout({ mode }) {
         ))}
 
         <button
+          type="button"
+          className="nav-demo"
           onClick={() => nav('/' + other)}
-          style={{
-            marginTop: 14,
-            border: '1px dashed var(--bd)',
-          }}
         >
           Switch to {other} demo
         </button>
 
         <Link to="/">
-          <button>Welcome screen</button>
+          <button type="button">Welcome screen</button>
         </Link>
 
-        <button onClick={resetDemo}>Reset demo data</button>
+        <button type="button" onClick={resetDemo}>Reset demo data</button>
 
-        <div
-          style={{
-            marginTop: 16,
-            paddingTop: 12,
-            borderTop: '1px solid var(--bd)',
-          }}
-        >
+        <div className="nav-account">
           {user?.email && (
-            <div
-              style={{
-                padding: '8px 12px',
-                fontSize: 12,
-                overflowWrap: 'anywhere',
-                color: 'var(--mu)',
-              }}
-            >
+            <div className="nav-user">
               Signed in as
               <br />
               {user.email}
             </div>
           )}
 
-          <button
-            onClick={handleLogout}
-            style={{
-              marginTop: 8,
-              border: '1px solid var(--bd)',
-              width: '100%',
-            }}
-          >
+          <button type="button" className="nav-logout" onClick={handleLogout}>
             Log out
           </button>
         </div>

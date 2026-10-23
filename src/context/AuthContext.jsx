@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, role')
+        .select('id, full_name, role, approval_status')
         .eq('id', user.id)
         .maybeSingle()
 
@@ -68,8 +68,13 @@ export function AuthProvider({ children }) {
       if (event === 'SIGNED_OUT' || !nextSession) {
         setProfile(null)
         setLoading(false)
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        // Defer profile fetching so it doesn't run inside the auth callback.
+      } else if (
+        event === 'SIGNED_IN' ||
+        event === 'TOKEN_REFRESHED' ||
+        event === 'USER_UPDATED'
+      ) {
+        setLoading(true)
+
         setTimeout(() => {
           if (active) {
             loadProfile(nextSession.user).finally(() => {
@@ -86,12 +91,22 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  async function signUp({ fullName, email, password }) {
+  async function signUp({ fullName, email, password, role = 'student' }) {
+    if (!['student', 'recruiter'].includes(role)) {
+      return {
+        data: null,
+        error: new Error('Invalid account type.'),
+      }
+    }
+
     return await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: fullName.trim() },
+        data: {
+          full_name: fullName.trim(),
+          role,
+        },
       },
     })
   }

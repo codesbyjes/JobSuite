@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
@@ -10,9 +9,10 @@ export default function Register() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [role, setRole] = useState('student')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -44,15 +44,24 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false)
         fullName,
         email: email.trim(),
         password,
+        role,
       })
 
       if (signUpError) throw signUpError
 
       if (data.session) {
-        navigate('/student')
+        if (role === 'recruiter') {
+          setMessage(
+            'Your recruiter account has been created and is awaiting approval.'
+          )
+        } else {
+          navigate('/student')
+        }
       } else {
         setMessage(
-          'Account created! Check your email for a verification link before signing in.'
+          role === 'recruiter'
+            ? 'Registration received! Verify your email if requested. Your recruiter account must be approved before accessing recruiter features.'
+            : 'Account created! Check your email for a verification link before signing in.'
         )
       }
     } catch (err) {
@@ -85,6 +94,17 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false)
         )}
 
         <form onSubmit={handleSubmit}>
+          <label htmlFor="role">I want to register as</label>
+          <select
+            id="role"
+            value={role}
+            onChange={(event) => setRole(event.target.value)}
+            required
+          >
+            <option value="student">Student</option>
+            <option value="recruiter">Recruiter</option>
+          </select>
+
           <label htmlFor="fullName">Full name</label>
           <input
             id="fullName"
@@ -105,51 +125,49 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false)
             required
           />
 
-          
-<label htmlFor="password">Password</label>
-<div className="password-field">
-  <input
-    id="password"
-    type={showPassword ? 'text' : 'password'}
-    autoComplete="new-password"
-    minLength={8}
-    value={password}
-    onChange={(event) => setPassword(event.target.value)}
-    required
-  />
-  <button
-    type="button"
-    className="password-toggle"
-    onClick={() => setShowPassword(!showPassword)}
-    aria-label={showPassword ? 'Hide password' : 'Show password'}
-  >
-    {showPassword ? 'Hide' : 'Show'}
-  </button>
-</div>
+          <label htmlFor="password">Password</label>
+          <div className="password-field">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              minLength={8}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
 
-
-        
-<label htmlFor="confirmPassword">Confirm password</label>
-<div className="password-field">
-  <input
-    id="confirmPassword"
-    type={showConfirmPassword ? 'text' : 'password'}
-    autoComplete="new-password"
-    minLength={8}
-    value={confirmPassword}
-    onChange={(event) => setConfirmPassword(event.target.value)}
-    required
-  />
-  <button
-    type="button"
-    className="password-toggle"
-    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-  >
-    {showConfirmPassword ? 'Hide' : 'Show'}
-  </button>
-</div>
-
+          <label htmlFor="confirmPassword">Confirm password</label>
+          <div className="password-field">
+            <input
+              id="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              minLength={8}
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={
+                showConfirmPassword ? 'Hide password' : 'Show password'
+              }
+            >
+              {showConfirmPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
 
           <button type="submit" disabled={loading}>
             {loading ? 'Creating account...' : 'Create account'}
