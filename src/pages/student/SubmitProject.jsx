@@ -1,20 +1,62 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useApp } from '../../context/AppContext.jsx'
-import { CATEGORY_SKILLS } from '../../data/quizzes.js'
 
-const STAGES = ['Reading project metadata', 'Identifying technologies', 'Analysing potential skills', 'Preparing skill assessments']
-const EMPTY = { title: '', desc: '', url: '', cat: 'Web Development', tech: '' }
+import React, { useEffect, useState } from "react";
 
-export default function SubmitProject() {
-  const { addProject, toast } = useApp()
-  const [step, setStep] = useState(1)
-  const [f, setF] = useState(EMPTY)
-  const [err, setErr] = useState({})
-  const [conf, setConf] = useState(false)
-  const [stage, setStage] = useState(0)
-  const [res, setRes] = useState(null)
-  const set = (k) => (e) => setF({ ...f, [k]: e.target.value })
+const STORAGE_KEY = "jobsuite_candidate_projects";
+
+const demoProjects = [
+  {
+    id: "demo-1",
+    title: "AI Career Advisor",
+    description:
+      "A career guidance platform helping first-generation graduates discover career paths, improve skills, and prepare for job opportunities.",
+    technologies: "React, JavaScript, CSS",
+    url: "https://github.com/",
+    fileName: "",
+    submittedAt: new Date().toISOString(),
+    status: "Under Review",
+  },
+];
+
+const emptyForm = {
+  title: "",
+  description: "",
+  technologies: "",
+  url: "",
+};
+
+function getSavedProjects() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : demoProjects;
+  } catch {
+    return demoProjects;
+  }
+}
+
+function formatDate(date) {
+  if (!date) return "Not available";
+
+  const parsed = new Date(date);
+
+  return Number.isNaN(parsed.getTime())
+    ? "Not available"
+    : parsed.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+}
+
+export default function Submitproject() {
+  const [projects, setProjects] = useState(getSavedProjects);
+  const [form, setForm] = useState(emptyForm);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [viewProject, setViewProject] = useState(null);
+  const [activeTab, setActiveTab] = useState("All");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (step !== 3) return
@@ -37,95 +79,35 @@ export default function SubmitProject() {
   const reset = () => { setF(EMPTY); setConf(false); setRes(null); setStep(1) }
 
   if (step === 1) return (
-    <div className="page-enter">
-      <header className="page-head">
-        <h1>Submit a project</h1>
-        <p className="mu">Step 1 of 3 · Project details</p>
-      </header>
-      <div className="card form-card">
-        <label htmlFor="t">Project title *</label>
-        <input id="t" value={f.title} onChange={set('title')} />
-        <div className="err">{err.title}</div>
-        <label htmlFor="d">Short description *</label>
-        <textarea id="d" rows="3" value={f.desc} onChange={set('desc')} />
-        <div className="err">{err.desc}</div>
-        <label htmlFor="u">GitHub repository URL *</label>
-        <input id="u" placeholder="https://github.com/you/project" value={f.url} onChange={set('url')} />
-        <div className="err">{err.url}</div>
-        <label htmlFor="c">Category</label>
-        <select id="c" value={f.cat} onChange={set('cat')}>{Object.keys(CATEGORY_SKILLS).map((c) => <option key={c}>{c}</option>)}</select>
-        <label htmlFor="tc">Technologies used (optional)</label>
-        <input id="tc" value={f.tech} onChange={set('tech')} />
-        <div className="row" style={{ marginTop: 16 }}>
-          <button className="btn" type="button" onClick={next}>Continue</button>
-        </div>
-      </div>
-    </div>
+    <><h1>Submit a project</h1><p className="mu">Step 1 of 3 · Project details</p>
+      <div className="card" style={{ maxWidth: 640 }}>
+        <label htmlFor="t">Project title *</label><input id="t" value={f.title} onChange={set('title')} /><div className="err">{err.title}</div>
+        <label htmlFor="d">Short description *</label><textarea id="d" rows="3" value={f.desc} onChange={set('desc')} /><div className="err">{err.desc}</div>
+        <label htmlFor="u">GitHub repository URL *</label><input id="u" placeholder="https://github.com/you/project" value={f.url} onChange={set('url')} /><div className="err">{err.url}</div>
+        <label htmlFor="c">Category</label><select id="c" value={f.cat} onChange={set('cat')}>{Object.keys(CATEGORY_SKILLS).map((c) => <option key={c}>{c}</option>)}</select>
+        <label htmlFor="tc">Technologies used (optional)</label><input id="tc" value={f.tech} onChange={set('tech')} /><br />
+        <button className="btn" onClick={next}>Continue</button>
+      </div></>
   )
   if (step === 2) return (
-    <div className="page-enter">
-      <header className="page-head">
-        <h1>Confirm evidence</h1>
-        <p className="mu">Step 2 of 3</p>
-      </header>
-      <div className="card form-card">
-        <p>
-          <b>{f.title}</b><br />
-          <span className="mu">{f.url}</span><br />
-          <span className="badge b-i">{f.cat}</span>
-        </p>
-        <div className="card prot">
-          <b>Privacy notice</b>
-          <p className="sm mu">Your submitted project evidence is used by JobSuite to identify potential skills. Recruiters cannot access your submitted repository contents or full project files through JobSuite.</p>
-        </div>
-        <label className="check">
-          <input type="checkbox" checked={conf} onChange={(e) => setConf(e.target.checked)} />
-          I understand and want to submit this project
-        </label>
-        <div className="err">{err.conf}</div>
-        <div className="row" style={{ marginTop: 12 }}>
-          <button className="btn g" type="button" onClick={() => setStep(1)}>Back</button>
-          <button className="btn" type="button" onClick={submit}>Submit for analysis</button>
-        </div>
-      </div>
-    </div>
+    <><h1>Confirm evidence</h1><p className="mu">Step 2 of 3</p>
+      <div className="card" style={{ maxWidth: 640 }}>
+        <p><b>{f.title}</b><br /><span className="mu">{f.url}</span><br /><span className="badge b-i">{f.cat}</span></p>
+        <div className="card prot"><b>Privacy notice</b><p className="sm">Your submitted project evidence is used by JobSuite to identify potential skills. Recruiters cannot access your submitted repository contents or full project files through JobSuite.</p></div>
+        <label style={{ display: 'flex', gap: 8, alignItems: 'center', color: 'var(--tx)' }}><input type="checkbox" style={{ width: 'auto' }} checked={conf} onChange={(e) => setConf(e.target.checked)} /> I understand and want to submit this project</label>
+        <div className="err">{err.conf}</div><br />
+        <div className="row"><button className="btn g" onClick={() => setStep(1)}>Back</button><button className="btn" onClick={submit}>Submit for analysis</button></div>
+      </div></>
   )
   if (!res) return (
-    <div className="page-enter">
-      <header className="page-head">
-        <h1>Analysing project</h1>
-        <p className="mu">Simulated demo: no GitHub or AI service is contacted.</p>
-      </header>
-      <div className="card form-card">
-        {STAGES.map((s, i) => (
-          <div key={s} className="row stage-row">
-            {i < stage ? '✅' : i === stage ? <span className="spin" /> : '⚪'}
-            <span className={i > stage ? 'mu' : ''}>{s}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <><h1>Analysing project</h1><p className="mu">Simulated demo: no GitHub or AI service is contacted.</p>
+      <div className="card" style={{ maxWidth: 640 }}>{STAGES.map((s, i) => <div key={s} className="row" style={{ padding: '8px 0' }}>{i < stage ? '✅' : i === stage ? <span className="spin" /> : '⚪'}<span className={i > stage ? 'mu' : ''}>{s}</span></div>)}</div></>
   )
   return (
-    <div className="page-enter">
-      <header className="page-head">
-        <h1>{res.title}</h1>
-        <p className="mu">AI-identified potential skills (simulated). These are not verified until you pass an assessment.</p>
-      </header>
-      <div className="card form-card">
-        {res.sk.map((s) => (
-          <div key={s} className="list-row">
-            <b>{s}</b>
-            <span className="badge b-i">Identified</span>
-            <span className="sp" />
-            <Link className="btn sm" to={`/student/assess/${s}`}>Start assessment</Link>
-          </div>
-        ))}
-        <div className="row" style={{ marginTop: 16 }}>
-          <Link className="btn g" to="/student/skills">Open skills & verification</Link>
-          <button className="btn g" type="button" onClick={reset}>Submit another</button>
-        </div>
-      </div>
-    </div>
+    <><h1>{res.title}</h1><p className="mu">AI-identified potential skills (simulated). These are not verified until you pass an assessment.</p>
+      <div className="card" style={{ maxWidth: 640 }}>
+        {res.sk.map((s) => <div key={s} className="row" style={{ padding: '8px 0', borderBottom: '1px solid var(--bd)' }}><b>{s}</b><span className="badge b-i">Identified</span><span className="sp" /><Link className="btn sm" to={`/student/assess/${s}`}>Start assessment</Link></div>)}<br />
+        <Link className="btn g" to="/student/skills">Open skills & verification</Link> <button className="btn g" onClick={reset}>Submit another</button>
+      </div></>
   )
 }
