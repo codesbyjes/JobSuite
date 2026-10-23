@@ -19,6 +19,6 @@ export default function Shortlisted() {
             <Link className="btn g sm" to={`/recruiter/candidate/${id}`}>View profile</Link>
             <button className="btn g sm" onClick={() => toggleShortlist(c.id)}>Remove from shortlist</button></div>
         )
-      }) : <div className="card">No one shortlisted yet. Open Talent discovery and shortlist candidates you want to follow up with.</div>}</>
+      }      ) : <div className="card empty-state">No one shortlisted yet. Open Talent discovery and shortlist candidates you want to follow up with.</div>}</>
   )
 }

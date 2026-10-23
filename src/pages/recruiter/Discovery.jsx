@@ -34,7 +34,9 @@ export default function Discovery() {
         <select aria-label="Sort" value={f.sort} onChange={set('sort')}><option value="match">Best match</option><option value="score">Assessment score</option><option value="name">Name</option></select>
       </div>
         <div className="row" style={{ marginTop: 10 }}><span className="mu sm">{list.length} candidates{job ? ` · match = verified required skills ÷ ${job.requiredSkills.length} required` : ''}. College is never used in ranking.</span><span className="sp" /><button className="btn g sm" onClick={() => setFilters(DEFAULT_FILTERS)}>Clear filters</button></div></div><br />
-      {list.length ? list.map(({ c, m }) => <CandidateRow key={c.id} c={c} job={job} m={m} />) : <div className="card">No candidates match these filters. Clear a filter to widen the search.</div>}
+      {list.length
+        ? list.map(({ c, m }) => <CandidateRow key={c.id} c={c} job={job} m={m} />)
+        : <div className="card empty-state">No candidates match these filters. Clear a filter to widen the search.</div>}
     </>
   )
 }

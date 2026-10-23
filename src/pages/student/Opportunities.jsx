@@ -151,7 +151,9 @@ export default function Opportunities() {
           })}
         </div>
       ) : (
-        <div className="card">No opportunities match these filters. Try clearing a filter.</div>
+        <div className="card empty-state">
+          No opportunities match these filters. Try clearing a filter.
+        </div>
       )}
     </div>
   )

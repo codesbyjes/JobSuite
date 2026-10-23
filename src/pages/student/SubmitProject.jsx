@@ -122,7 +122,7 @@ export default function SubmitProject() {
 
   if (step === 1) {
     return (
-      <>
+      <div className="submission-step" key={step}>
         <h1>Submit a project</h1>
         <p className="mu">Step 1 of 3 · Project details</p>
         <div className="card" style={{ maxWidth: 640 }}>
@@ -178,13 +178,13 @@ export default function SubmitProject() {
             ))}
           </section>
         )}
-      </>
+      </div>
     )
   }
 
   if (step === 2) {
     return (
-      <>
+      <div className="submission-step" key={step}>
         <h1>Confirm evidence</h1>
         <p className="mu">Step 2 of 3</p>
         <div className="card" style={{ maxWidth: 640 }}>
@@ -228,29 +228,36 @@ export default function SubmitProject() {
             </button>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
   if (!res) {
     return (
-      <>
+      <div className="submission-step" key={step}>
         <h1>Analysing project</h1>
         <p className="mu">Simulated demo: no GitHub or AI service is contacted.</p>
         <div className="card" style={{ maxWidth: 640 }}>
           {STAGES.map((item, index) => (
-            <div key={item} className="row" style={{ padding: '8px 0' }}>
+            <div
+              key={item}
+              className={`processing-step${index < stage ? ' is-complete' : index > stage ? ' is-pending' : ' is-current'}`}
+            >
               {index < stage ? '✅' : index === stage ? <span className="spin" /> : '⚪'}
               <span className={index > stage ? 'mu' : ''}>{item}</span>
             </div>
           ))}
         </div>
-      </>
+      </div>
     )
   }
 
   return (
-    <div onClick={handleResultsClick}>
+    <div
+      className="submission-step project-results"
+      key={step}
+      onClick={handleResultsClick}
+    >
       <h1>{res.title}</h1>
       <p className="mu">
         AI-identified potential skills (simulated). These are not verified

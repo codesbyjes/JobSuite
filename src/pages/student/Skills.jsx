@@ -438,7 +438,7 @@ export default function Skills() {
           })}
         </div>
       ) : (
-        <div className="card">
+        <div className="card empty-state">
           <h3>No matching skills</h3>
           <p className="mu">
             Try another search or choose a different status filter.

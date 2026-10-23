@@ -7,7 +7,7 @@ import { toPublicProfile, matchJob, initials } from '../../utils/match.js'
 export default function CandidateProfile() {
   const { id } = useParams()
   const { shortlist, toggleShortlist, filters } = useApp()
-  if (!CANDIDATES[id]) return <div className="card">Candidate not found. <Link to="/recruiter/talent">Back to talent discovery</Link></div>
+  if (!CANDIDATES[id]) return <div className="card empty-state">Candidate not found. <Link to="/recruiter/talent">Back to talent discovery</Link></div>
   const c = toPublicProfile(CANDIDATES[id]) // approved fields only
   const job = JOBS.find((j) => String(j.id) === String(filters.job)), m = matchJob(c, job)
   return (

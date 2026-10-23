@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react'
-import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import Toast from './Toast.jsx'
 import { useApp } from '../context/AppContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -24,6 +24,7 @@ const NAV = {
 export default function Layout({ mode }) {
   const { shortlist, resetDemo } = useApp()
   const { user, signOut } = useAuth()
+  const location = useLocation()
   const nav = useNavigate()
 
   useEffect(() => {
@@ -93,7 +94,9 @@ export default function Layout({ mode }) {
       </nav>
 
       <main>
-        <Outlet />
+        <div className="route-content" key={location.pathname}>
+          <Outlet />
+        </div>
       </main>
 
       <Toast />

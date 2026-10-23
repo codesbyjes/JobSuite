@@ -71,7 +71,7 @@ export default function Assessment() {
     const passed = score >= PASS_MARK
 
     return (
-      <div className="card" style={{ maxWidth: 560, textAlign: 'center' }}>
+      <div className="card result-enter" style={{ maxWidth: 560, textAlign: 'center' }}>
         {projectIncludesSkill && (
           <span className="badge b-p">Mentor review: Waiting for Mentor Approval</span>
         )}
@@ -120,10 +120,10 @@ export default function Assessment() {
       {projectIncludesSkill && (
         <p className="mu sm">Mentor review status: Waiting for Mentor Approval</p>
       )}
-      <div className="bar" style={{ maxWidth: 560, marginBottom: 14 }}>
+      <div className="bar assessment-progress" style={{ marginBottom: 14 }}>
         <i style={{ width: `${(i / Q.length) * 100}%` }} />
       </div>
-      <div className="card" style={{ maxWidth: 560 }}>
+      <div className="card assessment-question" key={i} style={{ maxWidth: 560 }}>
         <h3>{question}</h3>
         {options.map((o, k) => (
           <button
